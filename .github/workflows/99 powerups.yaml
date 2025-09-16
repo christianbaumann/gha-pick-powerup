@@ -1,0 +1,58 @@
+name: Run Playwright Tests
+
+on: workflow_dispatch  # This workflow triggers on every push to any branch.
+#on: push, pull_request
+
+jobs:
+  tests:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java  # Step 2: Installs the Java runtime.
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'  # Uses the Eclipse Temurin distribution of Java.
+          java-version: '21'  # Installs Java version 21.
+
+# ---------- Cash dependencies ----------
+
+      - name: Restore Maven dependencies cache  # Restores previously cached Maven dependencies.
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository  # Specifies the directory to cache (Maven's local repository).
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          # Generates a unique cache key based on OS and pom.xml hash.
+          restore-keys: |
+            ${{ runner.os }}-maven-
+          # Fallback key if an exact match isn't found.
+
+
+
+      - name: Build & Install  # Step 3: Builds the project while skipping tests.
+        run: mvn -B install -D skipTests --no-transfer-progress
+        # -B (batch mode) avoids interactive prompts.
+        # --no-transfer-progress speeds up logs by suppressing transfer details.
+
+      - name: Install Playwright Browsers  # Step 4: Installs Playwright browsers required for testing.
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
+        # Runs Playwright's CLI command to install required browsers and dependencies.
+
+      - name: Run tests  # Step 5: Executes the Playwright tests.
+        run: mvn test  # Runs all tests using Maven's test lifecycle.
+
+# ---------- Publish Test report ----------
+
+      - name: Publish Test report  # Displays the Surefire test report in the GitHub Actions UI.
+        uses: phoenix-actions/test-reporting@v15
+        with:
+          name: 'Publish test report (surefire)'  # The title of the report in the summary.
+          path: target/surefire-reports/TEST*.xml  # Specifies the test results file(s).
+          reporter: java-junit  # Specifies the report format.
+          list-tests: all  # Displays details of all tests in the summary.
+          list-suites: all  # Displays test suite details.
+          fail-on-error: true  # Fails the workflow if the report contains errors.
+          output-to: 'step-summary'  # Displays the report in the GitHub Actions summary tab.
