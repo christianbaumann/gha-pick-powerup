@@ -23,7 +23,7 @@ jobs:
         # --no-transfer-progress speeds up logs by suppressing transfer details.
 
       - name: Install Playwright Browsers  # Step 4: Installs Playwright browsers required for testing.
-        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
         # Runs Playwright's CLI command to install required browsers and dependencies.
 
       - name: Run tests  # Step 5: Executes the Playwright tests.
