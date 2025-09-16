@@ -1,4 +1,4 @@
-name: Run Playwright Tests
+name: Powerups Cheat Sheet
 
 on: workflow_dispatch  # This workflow triggers on every push to any branch.
 #on: push, pull_request
