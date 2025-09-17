@@ -21,7 +21,7 @@ jobs:
         run: mvn -B install -DskipTests --no-transfer-progress
 
       - name: Install Playwright Browsers
-        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --width-deps" --no-transfer-progress
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps" --no-transfer-progress
 
       - name: Run tests
         run: mvn test
