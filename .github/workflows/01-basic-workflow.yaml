@@ -1,6 +1,6 @@
 name: Basic Workflow  # The name of the workflow, which appears in the GitHub Actions UI.
 
-on: push, pull_request    # This defines the event that triggers the workflow. "workflow_dispatch" allows manual triggering.
+on: push
 
 jobs:
   basic-workflow:  # Defines a job named "basic-workflow".
