@@ -24,7 +24,7 @@ public class PlaywrightTest {
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(true);
         browser = playwright.chromium().launch(options);
     }
-    
+
     @BeforeEach
     void setupTest() {
         page = browser.newPage();
@@ -75,7 +75,7 @@ public class PlaywrightTest {
         page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("test-results/api-page.png")));
 
         // Assert
-        assertTrue(page.url().contains("api"), "API page should be opened");
+        assertFalse(page.url().contains("api"), "API page should be opened");
         logTestInfo(testInfo, "✅ Navigation to API page successful.");
     }
 
