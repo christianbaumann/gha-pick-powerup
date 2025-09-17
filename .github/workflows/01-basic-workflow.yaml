@@ -26,5 +26,13 @@ jobs:
       - name: Run tests
         run: mvn test
 
-      - name: Print environment details  # Step 2: Prints all environment variables to the workflow log.
-        run: env  # The "env" command lists all environment variables available in the runner.
+      - name: Publish report
+        uses: phoenix-actions/test-reporting@v15
+        with:
+          name: 'Publish PW reports'
+          path: target/surefire-reports/TEST*.xml
+          reporter: java-junit
+          list-test: all
+          list-suites: all
+          fail-on-error: true
+          output-to: 'step-summary'
